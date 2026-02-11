@@ -1,0 +1,24 @@
+2026-02-10 14:35:50,785 [INFO] Activator:176 - 
+
+
+2026-02-10 14:35:50,790 [INFO] Activator:177 - !SESSION log4j initialized
+2026-02-10 14:35:54,078 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] 
+2026-02-10 14:35:54,402 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 14:35:54,404 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 14:35:54,405 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 14:49:39,284 [ERROR] ConfigurationRetriever:142 - IOException on connection: Read timed out
+2026-02-10 14:50:00,185 [ERROR] ConfigurationRetriever:142 - IOException on connection: No route to host: getsockopt
+2026-02-10 14:50:00,195 [ERROR] ConfigurationRetriever:142 - IOException on connection: No route to host: getsockopt
+2026-02-10 14:50:00,208 [ERROR] ConfigurationRetriever:142 - IOException on connection: No route to host: getsockopt
+2026-02-10 15:27:10,106 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 15:27:10,108 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 15:27:10,108 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 15:40:20,130 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 15:40:20,131 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 15:40:20,131 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 15:50:16,568 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 15:50:16,571 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 15:50:16,571 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 22:06:57,534 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 22:06:57,539 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com
+2026-02-10 22:06:57,540 [ERROR] ConfigurationRetriever:142 - IOException on connection: sw-center.st.com

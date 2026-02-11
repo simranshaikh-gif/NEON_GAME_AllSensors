@@ -1,0 +1,6 @@
+../Core/Src/audio.c:12:6:Audio_Init	1
+../Core/Src/audio.c:18:6:Audio_Update	5
+../Core/Src/audio.c:50:6:Audio_PlayJump	1
+../Core/Src/audio.c:56:6:Audio_PlayDuck	1
+../Core/Src/audio.c:62:6:Audio_PlayCrash	1
+../Core/Src/audio.c:71:6:Audio_HapticClick	1

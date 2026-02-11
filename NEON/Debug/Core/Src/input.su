@@ -1,0 +1,10 @@
+../Core/Src/input.c:17:6:Input_Init	4	static
+../Core/Src/input.c:27:6:Input_Poll	32	static
+../Core/Src/input.c:115:13:I2C_Delay	16	static,ignoring_inline_asm
+../Core/Src/input.c:120:13:I2C_Start	8	static
+../Core/Src/input.c:130:13:I2C_Stop	8	static
+../Core/Src/input.c:139:16:I2C_WriteByte	24	static
+../Core/Src/input.c:163:16:I2C_ReadByte	24	static
+../Core/Src/input.c:189:13:I2C_BusClear	16	static
+../Core/Src/input.c:202:14:MLX90614_ReadTemp	24	static
+../Core/Src/input.c:248:17:ReadADC_BareMetal	24	static

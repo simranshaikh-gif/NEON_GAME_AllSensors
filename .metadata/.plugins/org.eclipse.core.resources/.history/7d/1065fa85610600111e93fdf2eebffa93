@@ -1,0 +1,21 @@
+#ifndef __DWIN_H
+#define __DWIN_H
+
+#include "main.h"
+
+// DGUS II Variable Addresses (VP) - Mapped from forensic analysis
+#define VP_TEMP 0x1000
+#define VP_LIGHT 0x1002
+#define VP_COLOR_R 0x1004
+#define VP_COLOR_G 0x1006
+#define VP_COLOR_B 0x1008
+#define VP_COLOR_ID 0x100A
+#define VP_HIGH_SCORE 0x100C
+
+// Function Prototypes
+void DWIN_Init(void);
+void DWIN_Update(int temp, int light, int r, int g, int b, int colorId,
+                 int highScore);
+void DWIN_WriteVP(uint16_t addr, uint16_t value);
+
+#endif /* __DWIN_H */

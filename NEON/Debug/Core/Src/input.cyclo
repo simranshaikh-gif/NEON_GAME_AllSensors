@@ -1,0 +1,10 @@
+../Core/Src/input.c:17:6:Input_Init	1
+../Core/Src/input.c:27:6:Input_Poll	11
+../Core/Src/input.c:115:13:I2C_Delay	2
+../Core/Src/input.c:120:13:I2C_Start	1
+../Core/Src/input.c:130:13:I2C_Stop	1
+../Core/Src/input.c:139:16:I2C_WriteByte	3
+../Core/Src/input.c:163:16:I2C_ReadByte	4
+../Core/Src/input.c:189:13:I2C_BusClear	2
+../Core/Src/input.c:202:14:MLX90614_ReadTemp	8
+../Core/Src/input.c:248:17:ReadADC_BareMetal	5

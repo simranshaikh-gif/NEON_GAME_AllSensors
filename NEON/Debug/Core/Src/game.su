@@ -1,0 +1,11 @@
+../Core/Src/game.c:78:6:SaveHighScore	32	static
+../Core/Src/game.c:103:6:LoadHighScore	32	static
+../Core/Src/game.c:128:6:SetGameLEDs	16	static
+../Core/Src/game.c:143:6:SetGameRelays	16	static
+../Core/Src/game.c:149:6:SpawnObstacle	24	static
+../Core/Src/game.c:186:6:Game_SetState	32	static
+../Core/Src/game.c:229:6:Game_Init	8	static
+../Core/Src/game.c:236:6:Game_Update	16	static
+../Core/Src/game.c:289:6:UpdateRunningLogic	96	static
+../Core/Src/game.c:463:6:Game_Render	64	static
+../Core/Src/game.c:519:6:RenderRunningGame	88	static

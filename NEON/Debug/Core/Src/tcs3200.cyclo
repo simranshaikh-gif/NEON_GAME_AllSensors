@@ -1,0 +1,7 @@
+../Core/Src/tcs3200.c:6:6:TCS3200_Init	1
+../Core/Src/tcs3200.c:15:6:TCS3200_SelectColor	1
+../Core/Src/tcs3200.c:22:6:TCS3200_PulseCallback	1
+../Core/Src/tcs3200.c:24:10:TCS3200_ReadFrequency	1
+../Core/Src/tcs3200.c:30:9:map_val	3
+../Core/Src/tcs3200.c:40:6:TCS3200_GetRGB	8
+../Core/Src/tcs3200.c:77:13:TCS3200_GetColorName	10

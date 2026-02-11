@@ -1,0 +1,3 @@
+../Core/Src/dwin.c:6:6:DWIN_Init	1
+../Core/Src/dwin.c:10:6:DWIN_WriteVP	1
+../Core/Src/dwin.c:24:6:DWIN_Update	1

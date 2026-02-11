@@ -1,0 +1,11 @@
+../Core/Src/tm1637.c:12:13:TM1637_Delay	16	static,ignoring_inline_asm
+../Core/Src/tm1637.c:17:13:TM1637_ClkHigh	8	static
+../Core/Src/tm1637.c:21:13:TM1637_ClkLow	8	static
+../Core/Src/tm1637.c:25:13:TM1637_DioHigh	8	static
+../Core/Src/tm1637.c:29:13:TM1637_DioLow	8	static
+../Core/Src/tm1637.c:33:13:TM1637_Start	8	static
+../Core/Src/tm1637.c:43:13:TM1637_Stop	8	static
+../Core/Src/tm1637.c:54:13:TM1637_WriteByte	24	static
+../Core/Src/tm1637.c:96:6:TM1637_Init	8	static
+../Core/Src/tm1637.c:101:6:TM1637_SetBrightness	16	static
+../Core/Src/tm1637.c:107:6:TM1637_DisplayDecimal	24	static

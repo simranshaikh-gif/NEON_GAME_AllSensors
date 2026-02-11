@@ -1,0 +1,10 @@
+15:50:15 **** Incremental Build of configuration Debug for project NEON ****
+make -j12 all 
+arm-none-eabi-size  NEON.elf 
+   text	   data	    bss	    dec	    hex	filename
+  61644	    520	   3584	  65748	  100d4	NEON.elf
+Finished building: default.size.stdout
+ 
+
+15:50:16 Build Finished. 0 errors, 0 warnings. (took 674ms)
+

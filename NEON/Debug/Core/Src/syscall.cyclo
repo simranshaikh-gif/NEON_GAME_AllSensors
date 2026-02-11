@@ -1,0 +1,2 @@
+../Core/Src/syscall.c:145:7:ff_memalloc	1
+../Core/Src/syscall.c:155:6:ff_memfree	1

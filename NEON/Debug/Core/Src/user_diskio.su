@@ -1,0 +1,15 @@
+../Core/Src/user_diskio.c:44:13:SD_CS_LOW	8	static
+../Core/Src/user_diskio.c:48:13:SD_CS_HIGH	8	static
+../Core/Src/user_diskio.c:52:13:SD_SPI_Transmit	16	static
+../Core/Src/user_diskio.c:56:13:SD_SPI_Receive	24	static
+../Core/Src/user_diskio.c:63:12:wait_ready	24	static
+../Core/Src/user_diskio.c:71:13:deselect	8	static
+../Core/Src/user_diskio.c:76:12:select	8	static
+../Core/Src/user_diskio.c:84:12:rcvr_datablock	32	static
+../Core/Src/user_diskio.c:109:12:xmit_datablock	24	static
+../Core/Src/user_diskio.c:135:13:send_cmd	24	static
+../Core/Src/user_diskio.c:172:9:USER_initialize	32	static
+../Core/Src/user_diskio.c:218:9:USER_status	16	static
+../Core/Src/user_diskio.c:224:9:USER_read	24	static
+../Core/Src/user_diskio.c:250:9:USER_write	24	static
+../Core/Src/user_diskio.c:279:9:USER_ioctl	40	static

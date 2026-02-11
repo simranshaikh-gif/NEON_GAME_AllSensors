@@ -1,0 +1,11 @@
+../Core/Src/tm1637.c:12:13:TM1637_Delay	2
+../Core/Src/tm1637.c:17:13:TM1637_ClkHigh	1
+../Core/Src/tm1637.c:21:13:TM1637_ClkLow	1
+../Core/Src/tm1637.c:25:13:TM1637_DioHigh	1
+../Core/Src/tm1637.c:29:13:TM1637_DioLow	1
+../Core/Src/tm1637.c:33:13:TM1637_Start	1
+../Core/Src/tm1637.c:43:13:TM1637_Stop	1
+../Core/Src/tm1637.c:54:13:TM1637_WriteByte	3
+../Core/Src/tm1637.c:96:6:TM1637_Init	1
+../Core/Src/tm1637.c:101:6:TM1637_SetBrightness	1
+../Core/Src/tm1637.c:107:6:TM1637_DisplayDecimal	4
