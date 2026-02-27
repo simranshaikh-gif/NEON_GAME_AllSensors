@@ -12,7 +12,7 @@ static bool click_active = false;
 void Audio_Init(void) {
   // Pins initialized in main.c (BUZZER_Pin, RELAY_Pin)
   HAL_GPIO_WritePin(BUZZER_GPIO_Port, BUZZER_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(RL1_GPIO_Port, RL1_Pin, GPIO_PIN_RESET);
 }
 
 void Audio_Update(void) {
@@ -42,7 +42,7 @@ void Audio_Update(void) {
   if (click_active) {
     if (now >= click_end_time) {
       click_active = false;
-      HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(RL1_GPIO_Port, RL1_Pin, GPIO_PIN_RESET);
     }
   }
 }
@@ -69,7 +69,7 @@ void Audio_PlayCrash(void) {
 }
 
 void Audio_HapticClick(void) {
-  HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(RL1_GPIO_Port, RL1_Pin, GPIO_PIN_SET);
   click_active = true;
   click_end_time = HAL_GetTick() + 50; // 50ms pulse
 }

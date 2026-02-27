@@ -28,11 +28,10 @@ void Input_Poll(void) {
   // 1. Digital Inputs
   bool touch = (HAL_GPIO_ReadPin(TOUCH_GPIO_Port, TOUCH_Pin) == GPIO_PIN_SET);
   bool btnTop =
-      (HAL_GPIO_ReadPin(BTN_TOP_GPIO_Port, BTN_TOP_Pin) == GPIO_PIN_SET);
+      (HAL_GPIO_ReadPin(BTN_UP_GPIO_Port, BTN_UP_Pin) == GPIO_PIN_SET);
   bool btnBot =
-      (HAL_GPIO_ReadPin(BTN_BOT_GPIO_Port, BTN_BOT_Pin) == GPIO_PIN_SET);
-  bool btnSlide =
-      (HAL_GPIO_ReadPin(BTN_SLIDE_GPIO_Port, BTN_SLIDE_Pin) == GPIO_PIN_SET);
+      (HAL_GPIO_ReadPin(BTN_DOWN_GPIO_Port, BTN_DOWN_Pin) == GPIO_PIN_SET);
+  bool btnSlide = (HAL_GPIO_ReadPin(BTN1_GPIO_Port, BTN1_Pin) == GPIO_PIN_SET);
 
   static char lastKey = 0;
   char currentKey = Keypad_GetKey(); // ENABLED

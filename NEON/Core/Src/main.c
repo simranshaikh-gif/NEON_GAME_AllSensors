@@ -169,9 +169,9 @@ int main(void) {
 
   // --- FORCE ALL LEDS ON (User Request) ---
   HAL_GPIO_WritePin(GPIOC, LED1_Pin | RGB_R_Pin | RGB_G_Pin | RGB_B_Pin,
-                    GPIO_PIN_SET);                            // LED1 + RGB
+                    GPIO_PIN_SET);                             // LED1 + RGB
   HAL_GPIO_WritePin(GPIOB, LED2_Pin | LED3_Pin, GPIO_PIN_SET); // LED2 + LED3
-  HAL_GPIO_WritePin(GPIOA, LED4_Pin | LD2_Pin, GPIO_PIN_SET);  // LED4 + LD2
+  HAL_GPIO_WritePin(GPIOA, LED4_Pin, GPIO_PIN_SET); // LED4 (LD2 removed)
 
   /* USER CODE END 2 */
 
@@ -200,21 +200,22 @@ int main(void) {
     if (HAL_GetTick() - lastDwinTick > 200) { // 5Hz update rate
       lastDwinTick = HAL_GetTick();
 
-
       // --- ESP32 JSON Dashboard Update ---
-      char jsonBuf[200];  // Create a storage buffer for the text
-      const char* statusStr = (currentState == STATE_RUNNING) ? "Running" :
-                               (currentState == STATE_GAME_OVER) ? "GameOver" : "Idle";
+      char jsonBuf[200]; // Create a storage buffer for the text
+      const char *statusStr = (currentState == STATE_RUNNING)     ? "Running"
+                              : (currentState == STATE_GAME_OVER) ? "GameOver"
+                                                                  : "Idle";
 
       // Create the JSON string
-      int len = snprintf(jsonBuf, sizeof(jsonBuf),
-          "{\"temp\":%.1f,\"lux\":%d,\"r\":%d,\"g\":%d,\"b\":%d,\"st\":\"%s\"}\n",
-          (float)Inputs.Temperature / 10.0f, (int)Inputs.Brightness,
-          Color.Red, Color.Green, Color.Blue, statusStr);
+      int len =
+          snprintf(jsonBuf, sizeof(jsonBuf),
+                   "{\"temp\":%.1f,\"lux\":%d,\"r\":%d,\"g\":%d,\"b\":%d,"
+                   "\"st\":\"%s\"}\n",
+                   (float)Inputs.Temperature / 10.0f, (int)Inputs.Brightness,
+                   Color.Red, Color.Green, Color.Blue, statusStr);
 
       // Transmit it over UART2 (the same one DWIN uses)
-      HAL_UART_Transmit(&huart2, (uint8_t*)jsonBuf, len, 100);
-
+      HAL_UART_Transmit(&huart2, (uint8_t *)jsonBuf, len, 100);
 
       // --- Sensor Dashboard Update (Optimized) ---
       // Read colors ONLY when NOT running (removes 120ms lag spike during play)
@@ -250,10 +251,7 @@ int main(void) {
     // 5. Game Speed Control
     HAL_Delay(50); // ~20 FPS for high-speed response
 
-    // Heartbeat
-    if ((HAL_GetTick() % 1000) < 50) {
-      HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); // Toggle LED (LD2) if available
-    }
+    // Heartbeat (LD2 Removed)
 
     // (Dashboard Logic Removed for Revert)
     // ---------------------------------------------------------
@@ -327,7 +325,8 @@ static void MX_SPI1_Init(void) {
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+  hspi1.Init.BaudRatePrescaler =
+      SPI_BAUDRATEPRESCALER_16; // Slowed down for stability
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -412,26 +411,24 @@ static void MX_GPIO_Init(void) {
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(TFT_RST_GPIO_Port, TFT_RST_Pin, GPIO_PIN_RESET);
+  /* --- INITIAL STATES --- */
+  HAL_GPIO_WritePin(GPIOA, BUZZER_Pin | LED1_Pin | TFT_DC_Pin | SEG_CLK_Pin,
+                    GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB,
+                    TFT_CS_Pin | LED2_Pin | LED3_Pin | RL2_Pin | BTN3_Pin,
+                    GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOC,
+                    TFT_RST_Pin | LED4_Pin | RGB_R_Pin | RGB_G_Pin | RGB_B_Pin |
+                        SEG_DIO_Pin,
+                    GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOD, RL1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin,
+                    GPIO_PIN_SET); // SD CS Idle High
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(TFT_DC_GPIO_Port, TFT_DC_Pin, GPIO_PIN_RESET);
+  // Move on to other pins
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pins : PC5 ONLY (Skip PC6 for UART6) */
-  GPIO_InitStruct.Pin = GPIO_PIN_5;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  // GPIO_InitStruct.Pin = TFT_RST_Pin; // DISABLED: PC7 used for UART6 (Moved
-  // to PB9) HAL_GPIO_Init(TFT_RST_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : LD2_Pin */
-  GPIO_InitStruct.Pin = LD2_Pin | SD_CS_Pin;
+  /*Configure GPIO pin : LED4_Pin */
+  GPIO_InitStruct.Pin = LED4_Pin | SD_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -440,158 +437,94 @@ static void MX_GPIO_Init(void) {
   /* Set SD_CS_Pin HIGH */
   HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET);
 
-  /* Configure TFT_CS_Pin, KEY_C1_Pin, KEY_C3_Pin, TCS_OE_Pin, TCS_OUT_Pin,
-   * RL2_Pin, TFT_RST (PB9) */
-  GPIO_InitStruct.Pin = TFT_CS_Pin | KEY_C1_Pin | KEY_C3_Pin | TCS_OE_Pin |
-                        TCS_OUT_Pin | RL2_Pin | TFT_RST_Pin;
+  /* --- PORT B --- */
+  // Outputs: TFT_CS, LED2, LED3, RL2, TCS_OE, Key_C1, Key_C3, BTN3
+  GPIO_InitStruct.Pin = TFT_CS_Pin | LED2_Pin | LED3_Pin | RL2_Pin |
+                        TCS_OE_Pin | KEY_C1_Pin | KEY_C3_Pin | BTN3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : TFT_DC_Pin */
-  GPIO_InitStruct.Pin = TFT_DC_Pin;
+  // Inputs: Keypad Rows 2, 3, 4 (PB15, PB14, PB13)
+  GPIO_InitStruct.Pin = KEY_R2_Pin | KEY_R3_Pin | KEY_R4_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* --- PORT A (Remaining) --- */
+  // Outputs: TCS_S2, TCS_S3, TFT_DC, BUZZER, LED1 (Push-Pull)
+  GPIO_InitStruct.Pin =
+      TCS_S2_Pin | TCS_S3_Pin | TFT_DC_Pin | BUZZER_Pin | LED1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(TFT_DC_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : TFT_CS_Pin */
-  GPIO_InitStruct.Pin = TFT_CS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(TFT_CS_GPIO_Port, &GPIO_InitStruct);
-
-  /* USER CODE BEGIN MX_GPIO_Init_2 */
-  // --- RESTORED MANUAL CONFIGURATION ---
-
-  // 1. 7-Segment (TM1637) & I2C Temp Sensor Shared Bus
-  // Initial State: High (Idle for I2C)
-  HAL_GPIO_WritePin(SEG_CLK_GPIO_Port, SEG_CLK_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(SEG_DIO_GPIO_Port, SEG_DIO_Pin, GPIO_PIN_SET);
-
+  // Output: SEG_CLK (Open-Drain for shared bus)
   GPIO_InitStruct.Pin = SEG_CLK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
-  HAL_GPIO_Init(SEG_CLK_GPIO_Port, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = SEG_DIO_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
-  HAL_GPIO_Init(SEG_DIO_GPIO_Port, &GPIO_InitStruct);
-
-  // 2. TCS3200 Color Sensor
-  HAL_GPIO_WritePin(TCS_S0_GPIO_Port, TCS_S0_Pin | TCS_S1_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(TCS_S2_GPIO_Port, TCS_S2_Pin | TCS_S3_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(TCS_OE_GPIO_Port, TCS_OE_Pin, GPIO_PIN_SET);
-
-  GPIO_InitStruct.Pin = TCS_S0_Pin | TCS_S1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = TCS_S2_Pin | TCS_S3_Pin;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = TCS_OE_Pin;
+  // Analog: Rotation (PA0), Temp (PB0), Light (PB1)
+  GPIO_InitStruct.Pin = ROTATION_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = TEMP_Pin | LIGHT_Pin;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  // Input: OUT (PB4) - IT Rising
-  GPIO_InitStruct.Pin = TCS_OUT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(TCS_OUT_GPIO_Port, &GPIO_InitStruct);
-
-  // 3. Touch Sensor (PC8) - Standard Input (Polling)
-  GPIO_InitStruct.Pin = TOUCH_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(TOUCH_GPIO_Port, &GPIO_InitStruct);
-
-  // 4. Slide Button (PB8) - Active High (Pull-Down)
-  GPIO_InitStruct.Pin = BTN1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(BTN1_GPIO_Port, &GPIO_InitStruct);
-
-  // 4b. Extra Buttons (PC6=UP, PC5=DOWN) - Active High (Pull-Down)
-  GPIO_InitStruct.Pin = BTN_UP_Pin | BTN_DOWN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  // 5. Keypad
-  // Rows (Input Pullup): PA10, PB15, PB14, PB13
+  // Input: Keypad R1 (PA10)
   GPIO_InitStruct.Pin = KEY_R1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(KEY_R1_Port, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = KEY_R2_Pin | KEY_R3_Pin | KEY_R4_Pin;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  // Cols (Output PP): PB3, PC4, PB5
-  HAL_GPIO_WritePin(KEY_C1_Port, KEY_C1_Pin | KEY_C3_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(KEY_C2_Port, KEY_C2_Pin, GPIO_PIN_RESET);
-
-  GPIO_InitStruct.Pin = KEY_C1_Pin | KEY_C3_Pin;
+  /* --- PORT C --- */
+  // Outputs: TFT_RST, LED4, RGB_R, RGB_G, RGB_B, KEY_C2, TCS_S0, TCS_S1
+  // (Push-Pull)
+  GPIO_InitStruct.Pin = TFT_RST_Pin | LED4_Pin | RGB_R_Pin | RGB_G_Pin |
+                        RGB_B_Pin | KEY_C2_Pin | TCS_S0_Pin | TCS_S1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = KEY_C2_Pin;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  // 6. ADC Pins (PA0 and PB1) - Analog Mode
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = GPIO_PIN_1; // PB1 (LDR) remains Analog
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  // Configure LED3 (PB0) as Output
-  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
-  GPIO_InitStruct.Pin = LED3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED3_GPIO_Port, &GPIO_InitStruct);
-
-  // 7. Buzzer (PA4) and Relay (PA1) - Output Push-Pull
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4 | GPIO_PIN_1, GPIO_PIN_RESET);
-  GPIO_InitStruct.Pin = GPIO_PIN_4 | GPIO_PIN_1;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  // 8. Indicator LEDs + RGB + On-board
-  HAL_GPIO_WritePin(GPIOC, LED1_Pin | RGB_R_Pin | RGB_G_Pin | RGB_B_Pin,
-                    GPIO_PIN_RESET);
-  GPIO_InitStruct.Pin = LED1_Pin | RGB_R_Pin | RGB_G_Pin | RGB_B_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  // Output: SEG_DIO (Open-Drain for shared bus)
+  GPIO_InitStruct.Pin = SEG_DIO_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  HAL_GPIO_WritePin(GPIOB, LED2_Pin, GPIO_PIN_RESET);
-  GPIO_InitStruct.Pin = LED2_Pin;
+  // Inputs: Touch Sensor, Button 2, Button 4
+  GPIO_InitStruct.Pin = TOUCH_Pin | BTN2_Pin | BTN4_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /* --- PORT D --- */
+  // Output: TCS_OE (replacing PB7 with PB2 per manual)
+  GPIO_InitStruct.Pin = TCS_OE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  HAL_GPIO_WritePin(GPIOA, LED4_Pin | LD2_Pin, GPIO_PIN_RESET);
-  GPIO_InitStruct.Pin = LED4_Pin | LD2_Pin;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  // Input: TCS_OUT (PB4) Interrupt mode
+  GPIO_InitStruct.Pin = TCS_OUT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  // NVIC
+  // Outputs: RL1 (PD2)
+  GPIO_InitStruct.Pin = RL1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /* NVIC */
   HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+  /* USER CODE END MX_GPIO_Init_2 */
 
   /* USER CODE END MX_GPIO_Init_2 */
 }

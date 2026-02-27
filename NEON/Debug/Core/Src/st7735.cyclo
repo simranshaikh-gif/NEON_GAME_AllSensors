@@ -3,10 +3,10 @@
 ../Core/Src/st7735.c:55:13:ST7735_WriteData	1
 ../Core/Src/st7735.c:62:6:ST7735_SetAddressWindow	1
 ../Core/Src/st7735.c:89:6:ST7735_Init	1
-../Core/Src/st7735.c:202:6:ST7735_FillRectangle	6
-../Core/Src/st7735.c:223:6:ST7735_FillScreen	1
-../Core/Src/st7735.c:227:6:ST7735_DrawPixel	1
-../Core/Src/st7735.c:235:6:ST7735_DrawSevenSegDigit	9
-../Core/Src/st7735.c:260:6:ST7735_DrawSevenSegNumber	3
-../Core/Src/st7735.c:273:6:ST7735_DrawChar	4
-../Core/Src/st7735.c:297:6:ST7735_WriteString	5
+../Core/Src/st7735.c:204:6:ST7735_FillRectangle	6
+../Core/Src/st7735.c:225:6:ST7735_FillScreen	1
+../Core/Src/st7735.c:229:6:ST7735_DrawPixel	1
+../Core/Src/st7735.c:237:6:ST7735_DrawSevenSegDigit	9
+../Core/Src/st7735.c:262:6:ST7735_DrawSevenSegNumber	3
+../Core/Src/st7735.c:275:6:ST7735_DrawChar	4
+../Core/Src/st7735.c:299:6:ST7735_WriteString	5

@@ -86,11 +86,12 @@ void SaveHighScore(void) {
       UINT bw = 0;
       FRESULT res_write = f_write(&USERFile, buf, strlen(buf), &bw);
       FRESULT res_close = f_close(&USERFile);
-      
+
       if (res_write == FR_OK && res_close == FR_OK && bw > 0) {
         printf("SD: Permanent Save OK! Score: %lu\r\n", highScore);
       } else {
-        printf("SD: Write FAILED! (Write: %u, Close: %u)\r\n", (unsigned int)res_write, (unsigned int)res_close);
+        printf("SD: Write FAILED! (Write: %u, Close: %u)\r\n",
+               (unsigned int)res_write, (unsigned int)res_close);
       }
     } else {
       printf("SD: Open ERROR (code: %u)\r\n", (unsigned int)res);
@@ -136,8 +137,7 @@ void SetGameLEDs(GPIO_PinState state) {
   HAL_GPIO_WritePin(RGB_G_GPIO_Port, RGB_G_Pin, state);
   HAL_GPIO_WritePin(RGB_B_GPIO_Port, RGB_B_Pin, state);
 
-  // On-board LD2
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, state);
+  // On-board LD2 Removed (Conflicts with SPI1 SCK)
 }
 
 void SetGameRelays(GPIO_PinState state) {
@@ -434,7 +434,6 @@ void UpdateRunningLogic(void) {
       float oLeft = obstacles[i].x, oRight = obstacles[i].x + 10;
       float oTop = GROUND_Y - 20, oBottom = GROUND_Y;
 
-
       if (obstacles[i].type == 0) {
         // High obstacles need more clearance in landscape
         oBottom = GROUND_Y - 15;
@@ -519,9 +518,6 @@ void Game_Render(void) {
 void RenderRunningGame(void) {
   // Show Score on 7-Seg
   TM1637_DisplayDecimal(score, 0);
-
-
-
 
   // --- UI: Speed & Energy ---
   ST7735_FillRectangle(18, 5, 84, 6, ST7735_WHITE);

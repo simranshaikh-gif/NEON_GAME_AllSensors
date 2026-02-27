@@ -103,8 +103,10 @@ void ST7735_Init(void) {
 
   printf("ST7735: Sending Commands (Standard)...\r\n");
 
+  printf("ST7735: SW Reset...\r\n");
   ST7735_WriteCommand(ST7735_CMD_SWRESET);
   HAL_Delay(150);
+  printf("ST7735: Sleep Out...\r\n");
   ST7735_WriteCommand(ST7735_CMD_SLPOUT);
   HAL_Delay(255);
 
