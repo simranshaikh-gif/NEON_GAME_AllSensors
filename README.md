@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # NEON GAME - All Sensors Project
 
 This project is a comprehensive embedded system application combining an STM32 microcontroller for game logic and sensor processing, a DWIN HMI display for user interaction, and an ESP32 for a remote web dashboard.
