@@ -97,5 +97,4 @@ This project is a comprehensive embedded system application combining an STM32 m
 ## ⚠️ Notes
 *   **UART Conflict**: The STM32 sends data to both DWIN and ESP32 via `huart2` (PA2). Ensure the electrical connections (wiring) usually allow for a "Parallel" connection (STM32 TX -> DWIN RX & ESP32 RX) for monitoring, as the ESP32 only *reads* the data.
 =======
-# NEON_GAME_AllSensors
->>>>>>> ed7559fb72eacdcfdf63f0e270377a3387db7e1b
+
